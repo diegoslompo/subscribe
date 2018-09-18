@@ -1,6 +1,10 @@
-
 /**
+ * 
+ * 
  * Library App
+ * 
+ * 
+ * 
  */
 
  // reducer external app code
@@ -25,17 +29,17 @@ function createStore (reducer) {
     listeners.push(listener)
 
     return () => {
-      listeners = listeners.filter((l) => l !== listeners)
+      listeners = listeners.filter((l) => l !== listener)
     }
   }
 
   // dispatch responsavel por atualizar o estado
-  const dispatch = (action) {
+  const dispatch = (action) => {
     // sera o que recebermos do estado de volta
     // state = todos(state,action)
     state = reducer(state,action)
     // Realiza o loop para set em cada listener
-    listeners.forEach((listener) => listerner()) 
+    listeners.forEach((listener) => listener()) 
   }
 
   return {
@@ -45,21 +49,12 @@ function createStore (reducer) {
   }
 }
 
-// // return the function
-// const store = createStore()
-
-// // GET store function params
-// store.Subscribe(() => {
-//   console.log('This is new states is:', getState())
-// }) 
-// // change store function params UN
-// const unsuscribe = store.Subscribe(() => {
-//   console.log('This state changed')
-// })   
-
-
 /**
- * App Code 
+ * 
+ * 
+ * App Code (reduce)
+ * 
+ * 
  */
 
 // state undefined, então seta um array usando padrao do es6
@@ -71,3 +66,21 @@ function todos(state = [], action) {
   }
   return state
 }
+
+// Função dos retornos
+const store = createStore(todos)
+
+// adiciona o metod subscribe e getState
+store.subscribe(()=> {
+  console.log('this new state is : ', store.getState())
+})
+
+// dispatch de uma ação a ser executada
+store.dispatch({
+  type: 'ADD_TODO',
+  todo: {
+    id: 0,
+    name: 'Learn Redux',
+    complete: false
+  }
+})
