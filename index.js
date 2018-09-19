@@ -57,18 +57,93 @@ function createStore (reducer) {
  * 
  */
 
+//  declaração para tornar mais previsivel as variaveis
+const ADD_TODO = 'ADD_TODO'
+const REMOVE_TODO = 'REMOVE_TODO'
+const TOGGLE_TODO = 'TOGGLE_TODO'
+const ADD_GOAL = 'ADD_GOAL'
+const REMOVE_GOAL = 'REMOVE_GOAL'
+
+
+// resume todas as actions do dispatch em funções
+function addTodoAction (todo) {
+  return {
+    type: ADD_TODO,
+    todo,
+  }
+}
+
+function removeTodoAction (id) {
+  return {
+    type: REMOVE_TODO,
+    id,
+  }
+}
+
+function toggleTodoAction (id) {
+  return {
+    type: TOGGLE_TODO,
+    id,
+  }
+}
+
+function addGoalAction (goal) {
+  return {
+    type: ADD_GOAL,
+    goal,
+  }
+}
+
+function removeGoalAction (id) {
+  return {
+    type: REMOVE_GOAL,
+    id,
+  }
+}
+
+
 // state undefined, então seta um array usando padrao do es6
 // 3. Listen to change on state
-function todos(state = [], action) {
-  if(action.type === 'ADD_TODO') {
+function todos (state = [], action) {
+  switch(action.type) {
     // concatena ao novo estado criando um novo array 
-    return state.concat([action.todo])
+    case ADD_TODO :
+      return state.concat([action.todo])
+    case REMOVE_TODO :
+      return state.filter((todo) => todo.id !== action.id)
+    // object.assign cria um novo objeto, do TODO com resultado diferente do atual false = true
+    case TOGGLE_TODO :
+      return state.map((todo) => todo.id !== action.id ? todo :
+        Object.assign({}, todo, { complete: !todo.complete }))
+    default :
+      return state
   }
-  return state
+}
+
+// Lista de metas
+function goals (state = [], action) {
+  switch(action.type) {
+    case ADD_GOAL :
+      return state.concat([action.goal])
+    case REMOVE_GOAL :
+      return state.filter((goal) => goal.id !== action.id)
+    default :
+      return state
+  }
+}
+
+
+// A store não pode receber mais de um parametro então é feito uma func para armazenar estes reducers agrupados no cmbine reduce
+// da mesma forma ao iniciar o state deve estar com objeto vazio
+function app (state = {}, action) {
+  return {
+    todos: todos(state.todos, action),
+    goals: goals(state.goals, action),
+  }
 }
 
 // Função dos retornos
-const store = createStore(todos)
+const store = createStore(app)
 
 // adiciona o metod subscribe e getState
 store.subscribe(()=> {
@@ -76,11 +151,45 @@ store.subscribe(()=> {
 })
 
 // dispatch de uma ação a ser executada
-store.dispatch({
-  type: 'ADD_TODO',
-  todo: {
-    id: 0,
-    name: 'Learn Redux',
-    complete: false
-  }
-})
+// store.dispatch({
+//   type: ADD_TODO,
+//   todo: {
+//     id: 0,
+//     name: 'Learn Redux',
+//     complete: false
+//   }
+// })
+
+store.dispatch(addTodoAction({
+  id: 0,
+  name: 'Walk the dog',
+  complete: false,
+}))
+
+store.dispatch(addTodoAction({
+  id: 1,
+  name: 'Wash the car',
+  complete: false,
+}))
+
+store.dispatch(addTodoAction({
+  id: 2,
+  name: 'Go to the gym',
+  complete: true,
+}))
+
+store.dispatch(removeTodoAction(1))
+
+store.dispatch(toggleTodoAction(0))
+
+store.dispatch(addGoalAction({
+  id: 0,
+  name: 'Learn Redux'
+}))
+
+store.dispatch(addGoalAction({
+  id: 1,
+  name: 'Lose 20 pounds'
+}))
+
+store.dispatch(removeGoalAction(0))
