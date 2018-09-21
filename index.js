@@ -1,14 +1,14 @@
- /**
-       * 
-       * 
-       * Library App
-       * 
-       * 
-       * 
-       */
+    /**
+     * 
+     * 
+     * Library App
+     * 
+     * 
+     * 
+     */
 
-      function generateId () {
-        return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
+    function generateId () {
+      return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
     }
 
     // reducer external app code
@@ -59,7 +59,7 @@
      * App Code (reduce)
      * 
      * 
-     */
+    */
 
     //  declaração para tornar mais previsivel as variaveis
     const ADD_TODO = 'ADD_TODO'
@@ -71,38 +71,38 @@
 
     // resume todas as actions do dispatch em funções
     function addTodoAction (todo) {
-    return {
-        type: ADD_TODO,
-        todo,
-    }
+      return {
+          type: ADD_TODO,
+          todo,
+      }
     }
 
     function removeTodoAction (id) {
-    return {
-        type: REMOVE_TODO,
-        id,
-    }
+      return {
+          type: REMOVE_TODO,
+          id,
+      }
     }
 
     function toggleTodoAction (id) {
-    return {
+      return {
         type: TOGGLE_TODO,
         id,
-    }
+      }
     }
 
     function addGoalAction (goal) {
-    return {
+      return {
         type: ADD_GOAL,
         goal,
-    }
+      }
     }
 
     function removeGoalAction (id) {
-    return {
+      return {
         type: REMOVE_GOAL,
         id,
-    }
+      }
     }
 
 
